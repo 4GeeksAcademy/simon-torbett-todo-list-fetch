@@ -1,4 +1,21 @@
+.text-center {
+    display: grid;
+    justify-content: center;
+}
 
+
+   
+   .titulo
+   {
+    font-size: 60px;
+    font-family: a; 
+   }
+  .tareas {
+    display: flex;
+    justify-content: left;
+    padding: auto;
+  
+  }
 /* 
 
     You can write your own styles here...
