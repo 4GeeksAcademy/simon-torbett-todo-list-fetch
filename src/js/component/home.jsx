@@ -14,7 +14,8 @@ const Home = () => {
 	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
-		fetch("https://playground.4geeks.com/apis/fake/todos/")
+		fetch("https://playground.4geeks.com/apis/fake/todos/user/simonT")
+		
 			.then(response => response.json())
 			.then(data => {
 				setTodos(data)
@@ -34,13 +35,13 @@ const Home = () => {
 			setInputValue('')
 		}
 	}
-	const deleteTodo = (index) => {
-		const updateTodos = todos.filter((currentIndex) => index !== currentIndex)
-		setTodos(updateTodos)
-		updateBackendTodos(updateTodos)
+	const deleteTodo = (labelToDelete) => {
+		const updatedTodos = todos.filter(todo => todo.label !== labelToDelete);
+		setTodos(updatedTodos);
+		
 	}
 	const updateBackendTodos = (updateTodos) => {
-		fetch("https://playground.4geeks.com/apis/fake/todos/", {
+		fetch("https://playground.4geeks.com/apis/fake/todos/user/simonT", {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -53,12 +54,27 @@ const Home = () => {
 	}
 	const ClearAllTodos = () => {
 		setTodos([])
-		fetch("https://playground.4geeks.com/apis/fake/todos/", {
-			method: 'DELETE'
-		})
-			.then(response => response.json())
-			.then(data=>console.log(data))
-			.catch(error => console.error('Error:', error))
+		fetch("https://playground.4geeks.com/apis/fake/todos/user/simonT", {
+      method: "PUT",
+      body: JSON.stringify(todos),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(resp => {
+        console.log(resp.ok); 
+        console.log(resp.status); 
+        console.log(resp.text()); 
+        return resp.json(); 
+    })
+    .then(data => {
+        
+        console.log(data); 
+    })
+    .catch(error => {
+
+        console.log(error);
+    });
 	}
 	return (
 		<div className="text-center"> <h1 className="titulo">Todos</h1>
@@ -78,7 +94,10 @@ const Home = () => {
 				</li>
 				{isLoading ? (<li className='list-group-item'>cargando</li>):(
 				todos.map((item, index) => (
-					<li className="list-group-item" key={index}> {item.label} <FontAwesomeIcon icon={faTrashCan} onClick={() => deleteTodo(index) } /></li>
+					<li className="list-group-item" key={index}>
+						{item.label} 
+						<FontAwesomeIcon icon={faTrashCan} onClick={() => deleteTodo(item.label)} />
+					</li>
 				))
 				)}
 			</ul>
